@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getUser } from '../utils/api';
 
 interface SidebarProps {
     isOpen: boolean;
@@ -8,6 +9,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const user = getUser();
 
     const menuItems = [
         {
@@ -57,10 +59,18 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                     <h1 className="text-white text-xl font-bold">Digilib</h1>
                 </div>
 
-                {/* User Info (Optional, based on image "Selamat Datang") */}
-                <div className="p-6 border-b border-gray-100">
+                {/* User Info */}
+                <div
+                    className="p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                        navigate('/profile');
+                        onClose();
+                    }}
+                >
                     <p className="text-gray-500 text-sm">Selamat Datang,</p>
-                    <p className="text-gray-900 font-bold text-lg">User</p>
+                    <p className="text-gray-900 font-bold text-lg truncate">
+                        {user?.name || "User"}
+                    </p>
                 </div>
 
                 {/* Navigation */}
@@ -76,8 +86,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                                             onClose();
                                         }}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                                ? 'bg-emerald-50 text-emerald-600'
-                                                : 'text-gray-600 hover:bg-gray-50'
+                                            ? 'bg-emerald-50 text-emerald-600'
+                                            : 'text-gray-600 hover:bg-gray-50'
                                             }`}
                                     >
                                         <span className={`${isActive ? 'text-emerald-600' : 'text-gray-400'}`}>

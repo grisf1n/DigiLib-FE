@@ -97,9 +97,9 @@ const BookDetail = () => {
                                 <span className="bg-emerald-500/50 px-3 py-1 rounded-md text-sm font-medium">
                                     {book.year}
                                 </span>
-                                <span className="bg-emerald-500/50 px-3 py-1 rounded-md text-sm font-medium">
+                                {/* <span className="bg-emerald-500/50 px-3 py-1 rounded-md text-sm font-medium">
                                     Stock: {book.available}
-                                </span>
+                                </span> */}
                             </div>
 
                             {/* Action Buttons */}
@@ -110,11 +110,11 @@ const BookDetail = () => {
                                     Read
                                 </Button> */}
                                 <div className="flex gap-3">
-                                    <Button
+                                    {/* <Button
                                         className="bg-emerald-500 hover:bg-emerald-400 text-white flex-1"
                                     >
                                         Add to List
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         className="bg-emerald-500 hover:bg-emerald-400 text-white flex-1"
                                         onClick={borrowBook}

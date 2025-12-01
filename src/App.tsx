@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import BookDetail from './pages/BookDetail';
 import CategoryBooks from './pages/CategoryBooks';
 import BorrowedBooks from './pages/BorrowedBooks';
+import Profile from './pages/Profile';
 import MainLayout from './components/MainLayout';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/home" element={<ProtectedRoute><MainLayout><Home /></MainLayout></ProtectedRoute>} />
                 <Route path="/borrowed" element={<ProtectedRoute><MainLayout><BorrowedBooks /></MainLayout></ProtectedRoute>} />
                 <Route path="/book/:id" element={<ProtectedRoute><MainLayout><BookDetail /></MainLayout></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><MainLayout><Profile /></MainLayout></ProtectedRoute>} />
                 <Route path="/category/:id" element={<ProtectedRoute><MainLayout><CategoryBooks /></MainLayout></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
