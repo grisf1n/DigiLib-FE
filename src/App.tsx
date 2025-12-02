@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Welcome from './pages/Welcome';
 import Login from './pages/auth/login';
 import Register from './pages/auth/register';
-import Dashboard from './pages/index';
+import Dashboard, { BooksAdmin, CategoriesAdmin, UsersAdmin, BorrowsAdmin } from './pages/admin';
 import Home from './pages/Home';
 import BookDetail from './pages/BookDetail';
 import CategoryBooks from './pages/CategoryBooks';
@@ -20,7 +20,13 @@ function App() {
                 <Route path="/" element={<Welcome />} />
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-                <Route path="/dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>} />
+                <Route path="/dashboard" element={<ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>}>
+                    <Route path="books" element={<BooksAdmin />} />
+                    <Route path="categories" element={<CategoriesAdmin />} />
+                    <Route path="users" element={<UsersAdmin />} />
+                    <Route path="borrows" element={<BorrowsAdmin />} />
+                    <Route index element={<Navigate to="books" replace />} />
+                </Route>
                 <Route path="/home" element={<ProtectedRoute><MainLayout><Home /></MainLayout></ProtectedRoute>} />
                 <Route path="/borrowed" element={<ProtectedRoute><MainLayout><BorrowedBooks /></MainLayout></ProtectedRoute>} />
                 <Route path="/book/:id" element={<ProtectedRoute><MainLayout><BookDetail /></MainLayout></ProtectedRoute>} />

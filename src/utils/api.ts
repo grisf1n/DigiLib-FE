@@ -170,3 +170,63 @@ export async function returnBorrow(id: number) {
 }
 
 export default api;
+// --- New CRUD helper functions and types ---
+
+// User type (minimal)
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    role?: string;
+}
+
+// Books CRUD
+export const createBook = async (data: Partial<Book>) => {
+    return api.post<Book>('/book', data);
+};
+export const updateBook = async (id: number, data: Partial<Book>) => {
+    return api.put<Book>(`/book/${id}`, data);
+};
+export const deleteBook = async (id: number) => {
+    return api.delete(`/book/${id}`);
+};
+
+// Categories CRUD
+export const createCategory = async (data: { name: string; description: string }) => {
+    return api.post<Category>('/category', data);
+};
+export const updateCategory = async (id: number, data: { name?: string; description?: string }) => {
+    return api.put<Category>(`/category/${id}`, data);
+};
+export const deleteCategory = async (id: number) => {
+    return api.delete(`/category/${id}`);
+};
+
+// Users CRUD (manage-user)
+export const getUsers = async (search = '') => {
+    return api.get<ApiResponse<User[]>>(`/manage-user?search=${search}`);
+};
+export const createUser = async (data: { name: string; email: string; password: string }) => {
+    return api.post<User>('/manage-user', data);
+};
+export const updateUser = async (id: number, data: Partial<User>) => {
+    return api.put<User>(`/manage-user/${id}`, data);
+};
+export const deleteUser = async (id: number) => {
+    return api.delete(`/manage-user/${id}`);
+};
+export const changePassword = async (id: number, password: string) => {
+    return api.patch(`/manage-user/${id}/password`, { password });
+};
+
+export const getBorrows = async () => {
+    return api.get<ApiResponse<BorrowItem[]>>('/borrow');
+};
+
+// Borrow admin actions
+export const approveBorrow = async (id: number) => {
+    return api.post(`/borrow/${id}/approve`);
+};
+export const rejectBorrow = async (id: number, reason: string) => {
+    return api.post(`/borrow/${id}/reject`, { reason });
+};

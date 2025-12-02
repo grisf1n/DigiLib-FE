@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getBookDetail, getBooks, getImageUrl, type Book } from '../utils/api';
+import { getBookDetail, getBooks, getImageUrl, getSelfBorrowed, returnBorrow, type Book, type BorrowItem } from '../utils/api';
 import SearchBar from '../components/SearchBar';
 import Button from '../components/Button';
 import BookCard from '../components/BookCard';
@@ -11,15 +11,17 @@ const BookDetail = () => {
     const navigate = useNavigate();
     const [book, setBook] = useState<Book | null>(null);
     const [books, setBooks] = useState<Book[]>([]);
+    const [currentBorrow, setCurrentBorrow] = useState<BorrowItem | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!id) return;
             try {
-                const [bookRes, booksRes] = await Promise.all([
+                const [bookRes, booksRes, borrowRes] = await Promise.all([
                     getBookDetail(Number(id)),
-                    getBooks()
+                    getBooks(),
+                    getSelfBorrowed()
                 ]);
 
                 if (bookRes.success) {
@@ -27,6 +29,12 @@ const BookDetail = () => {
                 }
                 if (booksRes.success) {
                     setBooks(booksRes.data);
+                }
+                if (borrowRes.success) {
+                    const activeBorrow = borrowRes.data.find(
+                        (b) => b.bookId === Number(id) && (b.status === 'pending' || b.status === 'borrowed')
+                    );
+                    setCurrentBorrow(activeBorrow || null);
                 }
             } catch (error) {
                 console.error('Failed to fetch data:', error);
@@ -37,6 +45,22 @@ const BookDetail = () => {
 
         fetchData();
     }, [id]);
+
+    const fetchBorrowStatus = async () => {
+        try {
+            const borrowRes = await getSelfBorrowed();
+            if (borrowRes.success) {
+                const activeBorrow = borrowRes.data.find(
+                    (b) => b.bookId === Number(id) && (b.status === 'pending' || b.status === 'borrowed')
+                );
+                setCurrentBorrow(activeBorrow || null);
+            } else {
+                setCurrentBorrow(null);
+            }
+        } catch (error) {
+            console.error("Failed to fetch borrow status", error);
+        }
+    };
 
     const borrowBook = async () => {
         try {
@@ -52,12 +76,27 @@ const BookDetail = () => {
 
             if (data.success) {
                 alert("Success borrow book!");
+                fetchBorrowStatus();
             } else {
                 alert("Failed: " + data.message);
             }
         } catch (err) {
             console.error(err);
             alert("Error borrowing book");
+        }
+    };
+
+    const handleReturn = async () => {
+        if (!currentBorrow) return;
+        if (!confirm("Are you sure you want to return this book?")) return;
+
+        try {
+            await returnBorrow(currentBorrow.id);
+            alert("Book returned successfully!");
+            fetchBorrowStatus();
+        } catch (err) {
+            console.error(err);
+            alert("Error returning book");
         }
     };
 
@@ -115,12 +154,28 @@ const BookDetail = () => {
                                     >
                                         Add to List
                                     </Button> */}
-                                    <Button
-                                        className="bg-emerald-500 hover:bg-emerald-400 text-white flex-1"
-                                        onClick={borrowBook}
-                                    >
-                                        Borrow
-                                    </Button>
+                                    {currentBorrow?.status === 'pending' ? (
+                                        <Button
+                                            className="bg-gray-400 cursor-not-allowed text-white flex-1"
+                                            disabled
+                                        >
+                                            Pending Approval
+                                        </Button>
+                                    ) : currentBorrow?.status === 'borrowed' ? (
+                                        <Button
+                                            className="bg-blue-500 hover:bg-blue-400 text-white flex-1"
+                                            onClick={handleReturn}
+                                        >
+                                            Return Book
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            className="bg-emerald-500 hover:bg-emerald-400 text-white flex-1"
+                                            onClick={borrowBook}
+                                        >
+                                            Borrow
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -24,22 +24,15 @@ const Home = () => {
                 const booksResponse = await getBooks();
                 if (booksResponse.success) {
                     setBooks(booksResponse.data);
+                    if (booksResponse.data.length > 0) {
+                        setFeaturedBook(booksResponse.data[0]);
+                    }
                 }
 
                 // Fetch categories
                 const categoriesResponse = await getCategories();
                 if (categoriesResponse.success) {
                     setCategories(categoriesResponse.data);
-                }
-
-                // Fetch featured book (ID 1)
-                try {
-                    const featuredResponse = await getBookDetail(1);
-                    if (featuredResponse.success) {
-                        setFeaturedBook(featuredResponse.data);
-                    }
-                } catch (err) {
-                    console.error('Failed to fetch featured book:', err);
                 }
 
             } catch (error) {
