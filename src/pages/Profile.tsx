@@ -31,9 +31,23 @@ const Profile = () => {
                         <div className="text-center sm:text-left flex-1">
                             <h2 className="text-2xl font-bold text-gray-900">{user?.name || "User"}</h2>
                             <p className="text-gray-500">{user?.email || "email@example.com"}</p>
-                            <div className="mt-2 inline-block bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium">
-                                Member
+                            <div
+                                className={`mt-2 inline-block px-3 py-1 rounded-full text-sm font-medium
+        ${user?.role === "admin"
+                                        ? "bg-purple-50 text-purple-700"
+                                        : user?.role === "librarian"
+                                            ? "bg-blue-50 text-blue-700"
+                                            : "bg-emerald-50 text-emerald-700"
+                                    }
+    `}
+                            >
+                                {user?.role === "admin"
+                                    ? "Admin"
+                                    : user?.role === "librarian"
+                                        ? "Librarian"
+                                        : "Member"}
                             </div>
+
                         </div>
 
                         <div className="w-full sm:w-auto">

@@ -12,6 +12,7 @@ import MainLayout from './components/MainLayout';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
+import StatisticsPage from './pages/admin/StatisticPage';
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 >
+                    <Route path="/dashboard/statistics" element={<StatisticsPage />} />
                     <Route path="books" element={<BooksAdmin />} />
                     <Route path="categories" element={<CategoriesAdmin />} />
                     <Route path="users" element={<UsersAdmin />} />

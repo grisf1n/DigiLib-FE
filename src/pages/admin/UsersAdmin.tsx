@@ -17,13 +17,24 @@ const UsersAdmin = () => {
             formFields={[
                 { name: 'name', label: 'Name', type: 'text', required: true },
                 { name: 'email', label: 'Email', type: 'email', required: true },
-                { name: 'password', label: 'Password', type: 'password', required: true }, // Only for create
-                // Note: Role selection could be added here if backend supports it
+                { name: 'password', label: 'Password', type: 'password', required: false },
+
+                {
+                    name: 'role',
+                    label: 'Role',
+                    type: 'select',
+                    required: true,
+                    options: [
+                        { label: 'Admin', value: 'admin' },
+                        { label: 'Librarian', value: 'librarian' },
+                        { label: 'Member', value: 'user' },
+                    ]
+                },
             ]}
             transformDataBeforeSubmit={(data) => {
-                // If updating, we might not want to send password if it's empty, 
-                // but generic form sends everything. Backend should handle optional password update or we need specific logic.
-                // For now, we assume standard create/update.
+                if (!data.password) {
+                    delete data.password;
+                }
                 return data;
             }}
         />

@@ -238,3 +238,23 @@ export const approveBorrow = async (id: number) => {
 export const rejectBorrow = async (id: number, reason: string) => {
     return api.post(`/borrow/${id}/reject`, { reason });
 };
+
+// Statistics
+
+export async function fetchJSON(url: string, options = {}) {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(API_BASE_URL + url, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+        },
+        ...options,
+    });
+
+    if (!res.ok) {
+        throw new Error("Request failed");
+    }
+
+    return res.json();
+}
